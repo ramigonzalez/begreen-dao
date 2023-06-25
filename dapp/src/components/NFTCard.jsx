@@ -6,11 +6,11 @@ const NFTCard = ({ nftDetails }) => {
   return (
     <div className="">
       <div className="">
-        <img style={{ borderColor: "red" }} src={image} alt="NftImage" />
+        <h3>{name}</h3>
+        <p>{description}</p>
       </div>
       <div className="">
-        <h3>Name: {name}</h3>
-        <p>Description: {description}</p>
+        <img style={{ borderColor: "red" }} src={image} alt="NftImage" />
       </div>
     </div>
   );

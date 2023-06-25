@@ -13,7 +13,7 @@ import BeGreenAdapter from "./rpc-adapters/BeGreenAdapter";
 
 const CLIENT_ID =
   "BMBHgtOOhgkl_9EiRrLrPTioP7NcFkIhjHfRfdAr92GAkeCFuzspi6XGFGVrvgjoYDeMMGWjA6fJbeHHlLQrl4k";
-const BACKEND_URL = "https://hackathon-sp-945f3287433e.herokuapp.com/mintNFT";
+const BACKEND_URL = "http://localhost:8000/mintNFT";
 
 function App() {
   const [web3auth, setWeb3auth] = useState(null);
@@ -72,7 +72,6 @@ function App() {
     getTokenBalance();
     getNFTDetails();
     getWasteDetailsByAddress();
-    checkOrCreateNFTCreation();
 
     let beGreenContract;
     const listenToMintedNFT = async () => {
@@ -84,25 +83,20 @@ function App() {
         console.log("user address is not present");
         return;
       }
+      debugger
       beGreenContract = new BeGreenAdapter(provider);
       await beGreenContract.listenToMintedNFT(address);
     };
 
     listenToMintedNFT();
-    return () => {
+
+    checkOrCreateNFTCreation();
+    return async () => {
       if (beGreenContract) {
-        const eventSubscription =
-          beGreenContract.events[beGreenContract.eventsNames.accountCreated]();
-        eventSubscription.off("data", (event) => {
-          console.log("Event received:", event);
-        });
+        await beGreenContract.clearSubscriptions();
       }
     };
   }, [address]);
-
-  // useEffect(() => {
-  //   setNftLoading(!!nftDetails);
-  // }, [nftDetails]);
 
   const checkOrCreateNFTCreation = async () => {
     if (!provider) {
@@ -123,7 +117,8 @@ function App() {
         setNftLoading(true);
         const { data } = await axios.post(
           BACKEND_URL,
-          { address }
+          { address },
+          { crossDomain: true }
         );
         console.log("API response", data);
       } catch (error) {
@@ -241,19 +236,6 @@ function App() {
     setDepositedWaste(deposited);
     setAccumulatedWaste(accumulated);
   };
-
-  // const getTopRecyclers = async () => {
-  //   if (!provider) {
-  //     console.log("provider not initialized yet");
-  //     return;
-  //   }
-  //   const beGreenContract = new BeGreenAdapter(provider);
-  //   const { top3AccumulatedUsers, top3DepositedUsers } =
-  //     await beGreenContract.getTopRecyclers();
-
-  //   setTopGlobalAccumulator(top3AccumulatedUsers);
-  //   setTopSeasonAccumulator(top3DepositedUsers);
-  // };
 
   const loggedInView = (
     <>
