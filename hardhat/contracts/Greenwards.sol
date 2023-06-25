@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-interface BeGreen {
+interface IBeGreen {
     function resetAndUpdateLogic(address user) external;
 
     function ownerOf(uint256 tokenId) external view returns (address);
@@ -27,7 +27,7 @@ contract Greenwards is ERC20, Ownable {
     address public beGreen;
 
     function mint(uint256 amount) public onlyOwner {
-        BeGreen beGreenInterface = BeGreen(beGreen);
+        IBeGreen beGreenInterface = IBeGreen(beGreen);
         uint256 totalNFTHolders = beGreenInterface.totalSupply();
         uint256 totalAccumulatedWaste = beGreenInterface
             .totalAccumulatedWaste();
