@@ -13,7 +13,7 @@ import BeGreenAdapter from "./rpc-adapters/BeGreenAdapter";
 
 const CLIENT_ID =
   "BMBHgtOOhgkl_9EiRrLrPTioP7NcFkIhjHfRfdAr92GAkeCFuzspi6XGFGVrvgjoYDeMMGWjA6fJbeHHlLQrl4k";
-const BACKEND_URL = "http://localhost:8000/mintNFT";
+const BACKEND_URL = "https://hackathon-sp-945f3287433e.herokuapp.com/mintNFT";
 
 function App() {
   const [web3auth, setWeb3auth] = useState(null);
