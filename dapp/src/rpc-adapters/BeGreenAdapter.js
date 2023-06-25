@@ -34,6 +34,7 @@ export default class WavePortalAdapter extends RPC {
       );
       return contract.methods.balanceOf(address).call();
     } catch (error) {
+      console.error("getUserNFTBalance", error);
       return error;
     }
   }
@@ -58,7 +59,10 @@ export default class WavePortalAdapter extends RPC {
       console.log("Retreiving nft details ...", details);
       return details;
     } catch (error) {
-      return error;
+      console.error("getNFTDetails", error);
+      const detailsResponse = await fetch("https://silver-sound-gamefowl-947.mypinata.cloud/ipfs/QmS1xfi6s5c5xLM2PqX7xqScmtT41QKfEXty6ygR9kLhNj");
+      const details = await detailsResponse.json();
+      return details;
     }
   }
 
@@ -109,60 +113,60 @@ export default class WavePortalAdapter extends RPC {
     }
   }
 
-  async clearSubscription() {
-    const web3 = new Web3(this.provider);
-    await web3.eth.clearSubscriptions();
-  }
+  // async clearSubscription() {
+  //   const web3 = new Web3(this.provider);
+  //   await web3.eth.clearSubscriptions();
+  // }
 
-  async listenToMintedNFT(address) {
-    try {
-      const web3 = new Web3(this.provider);
-      const contract = new web3.eth.Contract(
-        this.contractAbi,
-        this.contractAddress
-      );
+  // async listenToMintedNFT(address) {
+  //   try {
+  //     const web3 = new Web3(this.provider);
+  //     const contract = new web3.eth.Contract(
+  //       this.contractAbi,
+  //       this.contractAddress
+  //     );
 
-      // let options = {
-      //   fromBlock: 0,
-      //   address: [address],
-      //   topics: [],
-      // };
+  //     // let options = {
+  //     //   fromBlock: 0,
+  //     //   address: [address],
+  //     //   topics: [],
+  //     // };
 
-      // const subscription = await web3.eth.subscribe(
-      //   this.eventsNames.accountCreated,
-      //   options,
-      //   (err, event) => {
-      //     if (!err) console.log("subscription", event);
-      //   }
-      // );
+  //     // const subscription = await web3.eth.subscribe(
+  //     //   this.eventsNames.accountCreated,
+  //     //   options,
+  //     //   (err, event) => {
+  //     //     if (!err) console.log("subscription", event);
+  //     //   }
+  //     // );
 
-      // // note that in version 4.x the way you get notified for `data` and `error` has changed
-      // subscription.on("data", async (blockhead) => {
-      //   debugger;
-      //   console.log("New block header: ", blockhead);
-      // });
-      // subscription.on("error", (error) =>
-      //   console.log("Error when subscribing to New block header: ", error)
-      // );
+  //     // // note that in version 4.x the way you get notified for `data` and `error` has changed
+  //     // subscription.on("data", async (blockhead) => {
+  //     //   debugger;
+  //     //   console.log("New block header: ", blockhead);
+  //     // });
+  //     // subscription.on("error", (error) =>
+  //     //   console.log("Error when subscribing to New block header: ", error)
+  //     // );
 
-      contract.events
-        .AccountCreated(() => {})
-        .on("connected", function (subscriptionId) {
-          console.log("SubID: ", subscriptionId);
-        })
-        .on("data", function (event) {
-          console.log("Event:", event);
-          console.log("Owner Wallet Address: ", event.returnValues.owner);
-          //Write send email process here!
-        })
-        .on("changed", function (event) {
-          //Do something when it is removed from the database.
-        })
-        .on("error", function (error, receipt) {
-          console.log("Error:", error, receipt);
-        });
-    } catch (error) {
-      return error;
-    }
-  }
+  //     contract.events
+  //       .AccountCreated(() => {})
+  //       .on("connected", function (subscriptionId) {
+  //         console.log("SubID: ", subscriptionId);
+  //       })
+  //       .on("data", function (event) {
+  //         console.log("Event:", event);
+  //         console.log("Owner Wallet Address: ", event.returnValues.owner);
+  //         //Write send email process here!
+  //       })
+  //       .on("changed", function (event) {
+  //         //Do something when it is removed from the database.
+  //       })
+  //       .on("error", function (error, receipt) {
+  //         console.log("Error:", error, receipt);
+  //       });
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 }

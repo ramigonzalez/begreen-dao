@@ -58,3 +58,7 @@
 button {
   cursor: pointer;
 }
+
+.login {
+  font-size: xx-large;
+}

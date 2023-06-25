@@ -3,7 +3,7 @@ import { Web3Auth } from "@web3auth/web3auth";
 import { CHAIN_NAMESPACES } from "@web3auth/base";
 import RPC from "./rpc-adapters/web3RPCAdapter";
 import axios from "axios";
-
+import logo from "./images/begreen-dao.png";
 import "./App.css";
 import UserProfile from "./components/UserProfile";
 import NFTCard from "./components/NFTCard";
@@ -67,29 +67,29 @@ function App() {
     getNFTDetails();
     getWasteDetailsByAddress();
 
-    let beGreenContract;
-    const listenToMintedNFT = async () => {
-      if (!provider) {
-        console.log("provider not initialized yet");
-        return;
-      }
-      if (!address) {
-        console.log("user address is not present");
-        return;
-      }
-      debugger;
-      beGreenContract = new BeGreenAdapter(provider);
-      await beGreenContract.listenToMintedNFT(address);
-    };
+    // let beGreenContract;
+    // const listenToMintedNFT = async () => {
+    //   if (!provider) {
+    //     console.log("provider not initialized yet");
+    //     return;
+    //   }
+    //   if (!address) {
+    //     console.log("user address is not present");
+    //     return;
+    //   }
+    //   debugger;
+    //   beGreenContract = new BeGreenAdapter(provider);
+    //   await beGreenContract.listenToMintedNFT(address);
+    // };
 
-    listenToMintedNFT();
+    // listenToMintedNFT();
 
     checkOrCreateNFTCreation();
-    return async () => {
-      if (beGreenContract) {
-        await beGreenContract.clearSubscriptions();
-      }
-    };
+    // return async () => {
+    //   if (beGreenContract) {
+    //     await beGreenContract.clearSubscription();
+    //   }
+    // };
   }, [address]);
 
   const checkOrCreateNFTCreation = async () => {
@@ -197,6 +197,7 @@ function App() {
     }
     const beGreenContract = new BeGreenAdapter(provider);
     const response = await beGreenContract.getNFTDetails(address);
+    debugger
     setNftDetails(response);
   };
 
@@ -246,8 +247,8 @@ function App() {
   );
 
   const unloggedInView = (
-    <button onClick={login} className="card custom-btn">
-      Login
+    <button onClick={login} className="card custom-btn login">
+      Login or Create account
     </button>
   );
 
@@ -260,7 +261,7 @@ function App() {
         paddingRight: "5%",
       }}
     >
-      <h3 style={{ textAlign: "center", marginTop: 30 }}>BeGreen DAO</h3>
+      <img src={logo} alt="img2" />
       <div className="row">
         <div className="col-md-3">
           {" "}
