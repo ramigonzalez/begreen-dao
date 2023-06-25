@@ -6,6 +6,9 @@ app.use(formidableMiddleware());
 const { ethers } = require("ethers");
 const beGreenABI = require("./BeGreen.json");
 
+const cors = require('cors')
+app.use(cors())
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   next();
