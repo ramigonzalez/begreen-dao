@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { Web3Auth } from "@web3auth/web3auth";
 import { CHAIN_NAMESPACES } from "@web3auth/base";
-import RPC from "./web3RPCAdapter";
+import RPC from "./rpc-adapters/web3RPCAdapter";
+import axios from "axios";
 
 import "./App.css";
 import UserProfile from "./components/UserProfile";
-import Rewards from "./components/Rewards";
-import WavePortalAdapter from "./WavePortalAdapter";
+import NFTCard from "./components/NFTCard";
+
+import GreenwardsAdapter from "./rpc-adapters/GreenwardsAdapter";
+import BeGreenAdapter from "./rpc-adapters/BeGreenAdapter";
 
 const CLIENT_ID =
   "BMBHgtOOhgkl_9EiRrLrPTioP7NcFkIhjHfRfdAr92GAkeCFuzspi6XGFGVrvgjoYDeMMGWjA6fJbeHHlLQrl4k";
+const BACKEND_URL = "https://hackathon-sp-945f3287433e.herokuapp.com/mintNFT";
 
 function App() {
   const [web3auth, setWeb3auth] = useState(null);
@@ -17,10 +21,17 @@ function App() {
   const [address, setAddress] = useState("");
   const [balance, setBalance] = useState("");
   const [userData, setUserData] = useState({});
+  const [nftLoading, setNftLoading] = useState(false);
 
-  const [totalWaves, setTotalWaves] = useState(0);
-
+  // GREENWARDS
   const [tokenBalance, setTokenBalance] = useState(0);
+
+  //BEGREEN
+  const [nftDetails, setNftDetails] = useState(null);
+  const [depositedWaste, setDepositedWaste] = useState(0);
+  const [accumulatedWaste, setAccumulatedWaste] = useState(0);
+  // const [topGlobalAccumulator, setTopGlobalAccumulator] = useState([]);
+  // const [topSeasonAccumulator, setTopSeasonAccumulator] = useState([]);
 
   useEffect(() => {
     const init = async () => {
@@ -29,10 +40,10 @@ function App() {
           clientId: CLIENT_ID,
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
-            // chainId: "0x13881",
-            // rpcTarget: "https://rpc-mumbai.maticvigil.com/",
-            chainId: "0xaa36a7",
-            rpcTarget: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+            chainId: "0x13881",
+            rpcTarget: "https://rpc-mumbai.maticvigil.com/",
+            // chainId: "0xaa36a7",
+            // rpcTarget: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
           },
         });
 
@@ -54,8 +65,73 @@ function App() {
   useEffect(() => {
     getAccounts();
     getBalance();
-    getTotalWaves();
+    // getTopRecyclers();
   }, [userData]);
+
+  useEffect(() => {
+    getTokenBalance();
+    getNFTDetails();
+    getWasteDetailsByAddress();
+    checkOrCreateNFTCreation();
+
+    let beGreenContract;
+    const listenToMintedNFT = async () => {
+      if (!provider) {
+        console.log("provider not initialized yet");
+        return;
+      }
+      if (!address) {
+        console.log("user address is not present");
+        return;
+      }
+      beGreenContract = new BeGreenAdapter(provider);
+      await beGreenContract.listenToMintedNFT(address);
+    };
+
+    listenToMintedNFT();
+    return () => {
+      if (beGreenContract) {
+        const eventSubscription =
+          beGreenContract.events[beGreenContract.eventsNames.accountCreated]();
+        eventSubscription.off("data", (event) => {
+          console.log("Event received:", event);
+        });
+      }
+    };
+  }, [address]);
+
+  // useEffect(() => {
+  //   setNftLoading(!!nftDetails);
+  // }, [nftDetails]);
+
+  const checkOrCreateNFTCreation = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    if (!address) {
+      console.log("user address is not present");
+      return;
+    }
+    const beGreenContract = new BeGreenAdapter(provider);
+    const balance = await beGreenContract.getUserNFTBalance(address);
+
+    debugger;
+
+    if (balance == 0) {
+      try {
+        setNftLoading(true);
+        const { data } = await axios.post(
+          BACKEND_URL,
+          { address }
+        );
+        console.log("API response", data);
+      } catch (error) {
+        setNftLoading(false);
+        console.error(error);
+      }
+    }
+  };
 
   const login = async () => {
     if (!web3auth) {
@@ -63,11 +139,6 @@ function App() {
       return;
     }
     const web3authProvider = await web3auth.connect();
-
-    const address = await getAccounts();
-    // POST to backend/mint
-    // body { adderss }
-
     setProvider(web3authProvider);
   };
 
@@ -126,16 +197,63 @@ function App() {
     alert(privateKey);
   };
 
-  const getTotalWaves = async () => {
+  const getTokenBalance = async () => {
     if (!provider) {
       console.log("provider not initialized yet");
       return;
     }
-    const wavePortalContract = new WavePortalAdapter(provider);
-    debugger;
-    const response = await wavePortalContract.getTotalWaves();
-    setTotalWaves(response);
+    if (!address) {
+      console.log("user address is not present");
+      return;
+    }
+    const greenwardsContract = new GreenwardsAdapter(provider);
+    const response = await greenwardsContract.getTokenBalance(address);
+    setTokenBalance(response);
   };
+
+  const getNFTDetails = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    if (!address) {
+      console.log("user address is not present");
+      return;
+    }
+    const beGreenContract = new BeGreenAdapter(provider);
+    const response = await beGreenContract.getNFTDetails(address);
+    setNftDetails(response);
+  };
+
+  const getWasteDetailsByAddress = async () => {
+    if (!provider) {
+      console.log("provider not initialized yet");
+      return;
+    }
+    if (!address) {
+      console.log("user address is not present");
+      return;
+    }
+    const beGreenContract = new BeGreenAdapter(provider);
+    const { deposited, accumulated } =
+      await beGreenContract.getWasteDetailsByAddress(address);
+
+    setDepositedWaste(deposited);
+    setAccumulatedWaste(accumulated);
+  };
+
+  // const getTopRecyclers = async () => {
+  //   if (!provider) {
+  //     console.log("provider not initialized yet");
+  //     return;
+  //   }
+  //   const beGreenContract = new BeGreenAdapter(provider);
+  //   const { top3AccumulatedUsers, top3DepositedUsers } =
+  //     await beGreenContract.getTopRecyclers();
+
+  //   setTopGlobalAccumulator(top3AccumulatedUsers);
+  //   setTopSeasonAccumulator(top3DepositedUsers);
+  // };
 
   const loggedInView = (
     <>
@@ -148,18 +266,20 @@ function App() {
       <div className="col-md-9">
         <div style={{ marginTop: 20, textAlign: "left" }}>
           {/* index 0 */}
-          Deposited waste: {address}
+          Deposited waste: {depositedWaste}
           <br />
           <br />
           {/* index 1 */}
-          Accumulated deposited waste: {balance}
+          Accumulated deposited waste: {accumulatedWaste}
           <br />
           <br />
           Reward balance: {tokenBalance} GWD
+          <br />
+          <br />
         </div>
       </div>
       <hr />
-      <Rewards totalWaves={totalWaves} />
+      {nftDetails && <NFTCard nftDetails={nftDetails} />}
     </>
   );
 
