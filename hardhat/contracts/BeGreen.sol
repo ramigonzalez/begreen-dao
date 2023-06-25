@@ -20,6 +20,9 @@ contract BeGreen is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     address public greenwards;
     mapping(uint256 => string) levelsURI;
 
+    event AccountCreated(address indexed user);
+    event UpdateNFT(uint indexed level);
+
     constructor() ERC721("BeGreen", "BG") {
         levelsURI[
             2
@@ -36,8 +39,10 @@ contract BeGreen is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             accumulatedWaste[user][1] >= 100 && accumulatedWaste[user][1] < 1000
         ) {
             _setTokenURI(tokenOfOwnerByIndex(user, 0), levelsURI[2]);
+            emit UpdateNFT(2);
         } else if (accumulatedWaste[user][1] >= 1000) {
             _setTokenURI(tokenOfOwnerByIndex(user, 0), levelsURI[3]);
+            emit UpdateNFT(3);
         }
     }
 
@@ -53,8 +58,10 @@ contract BeGreen is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
             accumulatedWaste[user][1] >= 100 && accumulatedWaste[user][1] < 1000
         ) {
             _setTokenURI(tokenOfOwnerByIndex(user, 0), levelsURI[2]);
+            emit UpdateNFT(2);
         } else if (accumulatedWaste[user][1] >= 1000) {
             _setTokenURI(tokenOfOwnerByIndex(user, 0), levelsURI[3]);
+            emit UpdateNFT(3);
         }
     }
 
@@ -63,6 +70,7 @@ contract BeGreen is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+        emit AccountCreated(to);
     }
 
     function resetTotalAccumulatedWaste() public {
