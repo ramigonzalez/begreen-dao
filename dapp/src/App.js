@@ -11,8 +11,7 @@ import NFTCard from "./components/NFTCard";
 import GreenwardsAdapter from "./rpc-adapters/GreenwardsAdapter";
 import BeGreenAdapter from "./rpc-adapters/BeGreenAdapter";
 
-const CLIENT_ID =
-  "BC_1gACqDEGFkBSl6U6Jh1ij9smH3vbXeixMqZ1jLYPEIc9EYq7tHsufmjHcszTfwk2t3yw0W4oIorkJYZMrEII";
+const CLIENT_ID = "BJS2RUplfaj9Xr4u2zIl0WuUnPCPJngfFO9tqM_fM7eTgBDmqM_5wl3dKoTgEHzhAeQT89VfDgRdT8HfyFZeGQU";
 const BACKEND_URL = "https://hackathon-sp-945f3287433e.herokuapp.com/mintNFT";
 
 function App() {
