@@ -12,7 +12,7 @@ import GreenwardsAdapter from "./rpc-adapters/GreenwardsAdapter";
 import BeGreenAdapter from "./rpc-adapters/BeGreenAdapter";
 
 const CLIENT_ID =
-  "BMBHgtOOhgkl_9EiRrLrPTioP7NcFkIhjHfRfdAr92GAkeCFuzspi6XGFGVrvgjoYDeMMGWjA6fJbeHHlLQrl4k";
+  "BJHd6YVPrtn_ZGxyAGHSkqjX0VWSJznWEat6lyGxnkZYtasB02XyBhhGC2lBXCS9x_glbEtR_H6pILhPs-G8E9Q";
 const BACKEND_URL = "https://hackathon-sp-945f3287433e.herokuapp.com/mintNFT";
 
 function App() {
