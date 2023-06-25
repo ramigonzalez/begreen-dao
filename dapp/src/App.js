@@ -38,6 +38,7 @@ function App() {
       try {
         const web3auth = new Web3Auth({
           clientId: CLIENT_ID,
+          web3AuthNetwork: "mainnet",
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
             // MUMBAI
