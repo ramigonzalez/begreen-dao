@@ -11,7 +11,8 @@ import NFTCard from "./components/NFTCard";
 import GreenwardsAdapter from "./rpc-adapters/GreenwardsAdapter";
 import BeGreenAdapter from "./rpc-adapters/BeGreenAdapter";
 
-const CLIENT_ID = "BJS2RUplfaj9Xr4u2zIl0WuUnPCPJngfFO9tqM_fM7eTgBDmqM_5wl3dKoTgEHzhAeQT89VfDgRdT8HfyFZeGQU";
+const CLIENT_ID =
+  "BGaGgiHmEiFR6ICiX7UK3xy4-anY0-EIBu2Az-by_84PuT0bKX9t62IRzV-dfj43bOCXawxH1E8Y6tk6BsLxjeY";
 const BACKEND_URL = "https://hackathon-sp-945f3287433e.herokuapp.com/mintNFT";
 
 function App() {
@@ -37,15 +38,17 @@ function App() {
       try {
         const web3auth = new Web3Auth({
           clientId: CLIENT_ID,
-          web3AuthNetwork: "cyan",
+          web3AuthNetwork: "testnet",
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
+
             // MUMBAI
-            // chainId: "0x13881",
-            // rpcTarget: "https://rpc-mumbai.maticvigil.com/",
+            chainId: "0x13881",
+            rpcTarget: "https://rpc-mumbai.maticvigil.com/",
+
             // POLYGON
-            chainId: "0x89",
-            rpcTarget: "https://polygon-bor.publicnode.com",
+            // chainId: "0x89",
+            // rpcTarget: "https://polygon-bor.publicnode.com",
           },
         });
 
