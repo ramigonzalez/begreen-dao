@@ -40,7 +40,7 @@ function App() {
           clientId: CLIENT_ID,
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "0x13881",
+            chainId: "80001",
             rpcTarget: "https://rpc-mumbai.maticvigil.com/",
             // chainId: "0xaa36a7",
             // rpcTarget: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
