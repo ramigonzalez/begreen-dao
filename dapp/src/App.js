@@ -19,9 +19,7 @@ function App() {
   const [web3auth, setWeb3auth] = useState(null);
   const [provider, setProvider] = useState(null);
   const [address, setAddress] = useState("");
-  const [balance, setBalance] = useState("");
   const [userData, setUserData] = useState({});
-  const [nftLoading, setNftLoading] = useState(false);
 
   // GREENWARDS
   const [tokenBalance, setTokenBalance] = useState(0);
@@ -30,8 +28,6 @@ function App() {
   const [nftDetails, setNftDetails] = useState(null);
   const [depositedWaste, setDepositedWaste] = useState(0);
   const [accumulatedWaste, setAccumulatedWaste] = useState(0);
-  // const [topGlobalAccumulator, setTopGlobalAccumulator] = useState([]);
-  // const [topSeasonAccumulator, setTopSeasonAccumulator] = useState([]);
 
   useEffect(() => {
     const init = async () => {
@@ -41,14 +37,9 @@ function App() {
           web3AuthNetwork: "testnet",
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
-
             // MUMBAI
             chainId: "0x13881",
             rpcTarget: "https://rpc-mumbai.maticvigil.com/",
-
-            // POLYGON
-            // chainId: "0x89",
-            // rpcTarget: "https://polygon-bor.publicnode.com",
           },
         });
 
@@ -69,8 +60,6 @@ function App() {
 
   useEffect(() => {
     getAccounts();
-    getBalance();
-    // getTopRecyclers();
   }, [userData]);
 
   useEffect(() => {
@@ -119,7 +108,6 @@ function App() {
 
     if (balance == 0) {
       try {
-        setNftLoading(true);
         const { data } = await axios.post(
           BACKEND_URL,
           { address },
@@ -127,7 +115,6 @@ function App() {
         );
         console.log("API response", data);
       } catch (error) {
-        setNftLoading(false);
         console.error(error);
       }
     }
@@ -149,7 +136,6 @@ function App() {
     }
     const web3authProvider = await web3auth.logout();
     setProvider(web3authProvider);
-    setBalance("");
     setAddress("");
     setUserData({});
   };
@@ -173,17 +159,6 @@ function App() {
     const address = await rpc.getAccounts();
     setAddress(address);
     console.log(address);
-  };
-
-  const getBalance = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const balance = await rpc.getBalance();
-    setBalance(balance);
-    console.log(balance);
   };
 
   const getPrivateKey = async () => {
