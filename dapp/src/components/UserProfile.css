@@ -1,0 +1,26 @@
+.user-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-info {
+  margin-left: 20px;
+}
+
+.private-key {
+  color: red;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.private-key p:hover {
+  text-decoration: underline;
+}

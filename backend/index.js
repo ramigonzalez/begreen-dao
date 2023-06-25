@@ -9,10 +9,6 @@ const beGreenABI = require("./BeGreen.json");
 const cors = require('cors')
 app.use(cors())
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
 
 const provider = new ethers.providers.JsonRpcProvider("https://polygon-mumbai.gateway.tenderly.co")
 
