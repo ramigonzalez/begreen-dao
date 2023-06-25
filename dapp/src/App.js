@@ -40,7 +40,7 @@ function App() {
           clientId: CLIENT_ID,
           chainConfig: {
             chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "80001",
+            chainId: "0x13881",
             rpcTarget: "https://rpc-mumbai.maticvigil.com/",
             // chainId: "0xaa36a7",
             // rpcTarget: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
@@ -83,7 +83,7 @@ function App() {
         console.log("user address is not present");
         return;
       }
-      debugger
+      debugger;
       beGreenContract = new BeGreenAdapter(provider);
       await beGreenContract.listenToMintedNFT(address);
     };
